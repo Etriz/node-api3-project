@@ -25,4 +25,11 @@ function logger(req, res, next) {
   next();
 }
 
+function errorHandler(err, req, res, next) {
+  console.log("Error:", err.errorMessage);
+  const code = err.status || 400;
+  res.status(code).json(err);
+}
+
+server.use(errorHandler);
 module.exports = server;
