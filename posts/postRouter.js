@@ -26,12 +26,30 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   // do your magic!
+  try {
+    const { id } = req.params;
+    const data = await postDb.remove(id);
+    res.status(200).json({ message: `post ${id} deleted` });
+  } catch (error) {
+    res.status(500).json({ error: "unable to delete the post" });
+  }
 });
 
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   // do your magic!
+  try {
+    const { id } = req.params;
+    if (req.body.text && req.body.user_id) {
+      const data = await postDb.update(id, req.body);
+      res.status(200).json(data);
+    } else {
+      res.status(400).json({ error: "please include text and user_id" });
+    }
+  } catch (error) {
+    res.status(500).json({ error: "unable to change the post" });
+  }
 });
 
 // custom middleware
